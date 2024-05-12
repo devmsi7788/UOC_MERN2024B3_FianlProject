@@ -33,7 +33,7 @@ const Login = () => {
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-5" style={{ backgroundImage: `url('../asserts/img/lgbag.jpg')`, backgroundSize: 'cover', minHeight: '100vh' }}>
       <div className="row justify-content-center">
         <div className="col-md-6">
           <div className="card">
@@ -73,8 +73,8 @@ const Login = () => {
                   Login
                 </button>
                 <p className="mt-3">
-        <Link to="/register">Register here</Link>
-      </p>
+                Don't have an account? <Link to="/register">Register here</Link>
+                </p>
               </form>
             </div>
           </div>

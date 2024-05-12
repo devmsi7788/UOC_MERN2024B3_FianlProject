@@ -174,8 +174,8 @@ const Register = () => {
                   Register
                 </button>
                 <p className="mt-3">
-        <Link to="/register">Register here</Link>
-      </p>
+                Already have an account? <Link to="/">Login here</Link>
+                </p>
               </form>
             </div>
           </div>
