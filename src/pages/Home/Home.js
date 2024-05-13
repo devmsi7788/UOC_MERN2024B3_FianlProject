@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Navbar, Nav, Badge } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import GameCard from '../../componets/GameCard/GameCard'; // Assuming GameCard component is in the correct directory
+import GameCard from '../../componets/GameCard';
 import './Home.css';
+import Navigation from '../../componets/NavBar'
 
 const Home = () => {
   const games = [
@@ -78,25 +78,7 @@ const Home = () => {
 
   return (
     <div>
-    <Navbar bg="dark" variant="dark" expand="lg" className="mb-4">
-      <Navbar.Brand href="#home">Game Hub</Navbar.Brand>
-      <Navbar.Toggle aria-controls="basic-navbar-nav" />
-      <Navbar.Collapse id="basic-navbar-nav" className="justify-content-between">
-        <Nav>
-          <Nav.Link href="#home">Home</Nav.Link>
-          <Nav.Link href="#games">Games</Nav.Link>
-          <Nav.Link href="#about">About</Nav.Link>
-        </Nav>
-        <Nav>
-          <Nav.Link href="#profile">Hi, Game User</Nav.Link>
-          <Nav.Link href="#notifications">
-         Msg
-           <Badge pill variant="light" className="ml-1">{numberOfNotifications}</Badge>
-          </Nav.Link>
-          <Nav.Link href="#logout">Logout</Nav.Link>
-        </Nav>
-      </Navbar.Collapse>
-    </Navbar>
+      <Navigation numberOfNotifications={10} />
       <div className="container mt-4">
         <div className="row">
           <div className="col-md-12 text-center">
