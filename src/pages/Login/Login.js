@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; 
+import { Link, useNavigate  } from 'react-router-dom'; 
 import '../Login/Login.css'
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -31,6 +33,10 @@ const Login = () => {
       formErrors.password = 'Password is required';
     }
     setErrors(formErrors);
+
+    if (formData.username && formData.password) {
+      navigate('/home');
+    }
   };
 
   return (
