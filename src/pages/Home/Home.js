@@ -8,11 +8,12 @@ import './Home.css';
 const Home = () => {
   const games = [
     {
-      id: 1,
-      title: 'Adventure Quest',
-      description: 'Embark on an epic journey through mystical lands filled with danger and treasure. Gather your party and explore dungeons, defeat powerful foes, and become the hero of legend!',
-      image: 'https://source.unsplash.com/300x200/?adventure',
-      details: 'In Adventure Quest, you will embark on a thrilling journey across the kingdom of Aragonia. As a brave adventurer, you will encounter mythical creatures, solve challenging puzzles, and uncover hidden treasures. Explore ancient ruins, dark forests, and treacherous mountains as you seek to fulfill your destiny and become the greatest hero the realm has ever known!',
+      id: 'NumberGuess',
+      title: 'Guess the Number',
+      description: 'Test your luck and intuition in this thrilling game of numbers! Guess the secret number between 1 and 10, and if you guess right, you win!',
+      image: 'https://source.unsplash.com/300x200/?number',
+      details: 'In Guess the Number, you will have the chance to test your luck and intuition by guessing a secret number chosen randomly by the system. If your guess matches the hidden number, you win! But be careful, you only have one chance to guess!',
+      isAvailable: true,
     },
     {
       id: 2,
