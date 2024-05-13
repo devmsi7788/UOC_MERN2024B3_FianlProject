@@ -7,6 +7,8 @@ const NumberGuess = () => {
   const [secretNumber, setSecretNumber] = useState(Math.floor(Math.random() * 10) + 1);
   const [isGameOver, setIsGameOver] = useState(false);
   const [backgroundImage, setBackgroundImage] = useState('');
+  const [correctCount, setCorrectCount] = useState(0);
+  const [failedCount, setFailedCount] = useState(0);
 
   // Function to generate a random background image URL
   const getRandomBackgroundImage = () => {
@@ -28,8 +30,10 @@ const NumberGuess = () => {
 
     if (userGuess === secretNumber) {
       setResult('Congratulations! You guessed the correct number!');
+      setCorrectCount(correctCount + 1);
     } else {
       setResult(`Sorry, the correct number was ${secretNumber}. Better luck next time!`);
+      setFailedCount(failedCount + 1);
     }
 
     setIsGameOver(true);
@@ -89,11 +93,19 @@ const NumberGuess = () => {
               </div>
             </div>
           </div>
+          <div className="col-md-6">
+            <div className="card" style={{ width: '300px', backgroundColor: '#fff', border: '1px solid #ccc', borderRadius: '8px', padding: '20px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>
+              <div className="card-body">
+                <h3>Guess Statistics</h3>
+                <p>Correct Guesses: {correctCount}</p>
+                <p>Failed Guesses: {failedCount}</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
     </div>
-   
   );
 };
 

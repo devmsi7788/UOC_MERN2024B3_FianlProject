@@ -1,8 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import GameCard from '../../componets/GameCard'; // Assuming GameCard component is in the correct directory
-import './Home.css';
+import GameCard from '../../componets/GameCard'; 
 import Navigation from '../../componets/NavBar'
 
 const Home = () => {
