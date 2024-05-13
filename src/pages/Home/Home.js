@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import GameCard from '../../componets/GameCard'; 
-import Navigation from '../../componets/NavBar'
+import Navigation from '../../componets/NavBar';
 
 const Home = () => {
   const games = [
@@ -70,30 +70,76 @@ const Home = () => {
       image: 'https://source.unsplash.com/300x200/?underwater',
       details: 'Underwater Odyssey invites you to explore the wonders of the ocean depths, where mysteries and adventures await beneath the waves. Dive into coral reefs teeming with life, explore ancient shipwrecks filled with treasure, and encounter majestic creatures such as whales, dolphins, and sharks. But beware of the dangers that lurk in the deep, for not everything in the ocean is as friendly as it seems...',
     },
-    // Add more games with details as needed
   ];
 
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // Move to the next slide
+      setCurrentSlide((prevSlide) => (prevSlide + 1) % 3); // Change '3' to the number of slides
+    }, 1000); // Change the duration (in milliseconds) between slide transitions
+
+    return () => clearInterval(interval); // Clean up interval on component unmount
+  }, []);
+
   return (
-    <div>
+    <div style={{ position: 'relative' }}>
+      <style>{`
+        .image-slider {
+          /* Add your image slider styles here */
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 13%;
+          z-index: -1; /* Ensure the image slider stays behind other content */
+        }
+        .image-slider img {
+          /* Define styles for the background images */
+          width: 100%;
+          height: 100%;
+          object-fit: cover; /* Ensure the image covers the entire slider area */
+          opacity: 0; /* Hide all images by default */
+        }
+        .image-slider img.active {
+          opacity: 1; /* Show the active image */
+        }
+      `}</style>
       <Navigation numberOfNotifications={10} />
-      <div className="container mt-4">
-        <div className="row">
-          <div className="col-md-12 text-center">
-            <h1 className="mt-5 mb-3">Welcome to the Game Hub!</h1>
-            <p className="lead mb-4">Discover a world of exciting games and challenges.</p>
-            <Link to="/home" className="btn btn-primary">
-              Explore Games
-            </Link>
-          </div>
-        </div>
-        <div className="row mt-5">
-          {games.map((game) => (
-            <div key={game.id} className="col-md-4 mb-4">
-              <GameCard game={game} />
-            </div>
-          ))}
-        </div>
+      <div className="image-slider">
+        {['number', 'fantasy', 'wildwest'].map((tag, index) => (
+          <img
+            key={index}
+            src={`https://source.unsplash.com/300x200/?${tag}`}
+            alt={tag}
+            className={index === currentSlide ? 'active' : ''}
+          />
+        ))}
       </div>
+
+      <div className="container mt-4">
+  <div className="row">
+    <div className="col-md-12 text-center" style={{
+      backgroundColor: 'white',
+      opacity: 0.8,
+    }}>
+      <h1 className="mt-5 mb-3">Welcome to the Game Hub!</h1>
+      <p className="lead mb-4">Discover a world of exciting games and challenges.</p>
+      <Link to="/home" className="btn btn-primary">
+        Explore Games
+      </Link>
+    </div>
+  </div>
+  <div className="row mt-5">
+    {games.map((game) => (
+      <div key={game.id} className="col-md-4 mb-4">
+        <GameCard game={game} />
+      </div>
+    ))}
+  </div>
+</div>
+
     </div>
   );
 };
