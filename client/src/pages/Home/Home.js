@@ -76,22 +76,26 @@ const Home = () => {
 
   const { isAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
- // const [currentSlide, setCurrentSlide] = useState(0);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/');
+      return;
+    }
+
+    const interval = setInterval(() => {
+      // Move to the next slide
+      setCurrentSlide((prevSlide) => (prevSlide + 1) % 3); // Change '3' to the number of slides
+    }, 1000); // Change the duration (in milliseconds) between slide transitions
+
+    return () => clearInterval(interval); // Clean up interval on component unmount
+  }, [isAuthenticated, navigate]);
 
   if (!isAuthenticated) {
     navigate('/');
     return null;
   }
-
-  // // eslint-disable-next-line react-hooks/rules-of-hooks
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     // Move to the next slide
-  //     setCurrentSlide((prevSlide) => (prevSlide + 1) % 3); // Change '3' to the number of slides
-  //   }, 1000); // Change the duration (in milliseconds) between slide transitions
-
-  //   return () => clearInterval(interval); // Clean up interval on component unmount
-  // }, []);
 
   return (
     <div style={{ position: 'relative' }}>
@@ -117,16 +121,18 @@ const Home = () => {
         }
       `}</style>
       <Navigation numberOfNotifications={10} />
-      {/* <div className="image-slider">
-        {['number', 'fantasy', 'wildwest'].map((tag, index) => (
+      {<div className="image-slider">
+        {['https://i.postimg.cc/y8p16D0r/space.jpg', 'https://i.postimg.cc/fb3wVMKW/fantasy.jpg',
+         'https://i.postimg.cc/gJ8mK4Qf/pirate.jpg','https://i.postimg.cc/J0Q8f01x/cyber.webp',
+        'https://i.postimg.cc/sDVspYcN/underwater.jpg'].map((tag, index) => (
           <img
             key={index}
-            src={`https://source.unsplash.com/300x200/?${tag}`}
+            src={`${tag}`}
             alt={tag}
             className={index === currentSlide ? 'active' : ''}
           />
         ))}
-      </div> */}
+      </div>}
 
       <div className="container mt-4">
   <div className="row">
