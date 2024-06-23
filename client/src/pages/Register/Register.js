@@ -1,8 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom'; 
-import './Register.css'
+import axios from 'axios';
+import './Register.css';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthContext';
 
 const Register = () => {
+  const [error, setError] = useState(null);
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     username: '',
@@ -56,7 +62,7 @@ const Register = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Basic validation
     let formErrors = {};
@@ -83,7 +89,28 @@ const Register = () => {
     }
     setErrors(formErrors);
 
-    // If no errors, you can proceed with further actions like API call for registration
+    try {
+      const res = await axios.post('http://localhost:5000/api/auth/register', {
+        email: formData.email,
+        username: formData.username,
+        password: formData.password,
+        country: formData.country
+    });
+      console.log('Response:', res); // Log the entire response
+      if (res && res.data && res.data.token) {
+          login(res.data.token,formData.username);
+          navigate('/home'); // Use navigate instead of history.push
+      } else {
+          setError('Registration failed. Please try again.');
+      }
+  } catch (err) {
+      console.error('Error:', err); // Log the entire error
+      const errorMsg = err.response && err.response.data && err.response.data.msg 
+          ? err.response.data.msg 
+          : 'An error occurred. Please try again.';
+      setError(errorMsg);
+  }
+
   };
 
   return (

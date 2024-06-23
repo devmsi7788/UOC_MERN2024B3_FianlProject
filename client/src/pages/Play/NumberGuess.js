@@ -1,7 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import Navigation from '../../componets/NavBar'
+import React, { useState, useEffect, useContext } from 'react';
+import Navigation from '../../componets/NavBar';
+import { AuthContext } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const NumberGuess = () => {
+  const { isAuthenticated, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [guess, setGuess] = useState('');
   const [result, setResult] = useState('');
   const [secretNumber, setSecretNumber] = useState(Math.floor(Math.random() * 10) + 1);
@@ -9,11 +15,13 @@ const NumberGuess = () => {
   const [backgroundImage, setBackgroundImage] = useState('');
   const [correctCount, setCorrectCount] = useState(0);
   const [failedCount, setFailedCount] = useState(0);
+  const [error, setError] = useState(null);
+  const token = localStorage.getItem('token');
+  const username = localStorage.getItem('username');
 
   // Function to generate a random background image URL
   const getRandomBackgroundImage = () => {
-    const randomNumber = Math.floor(Math.random() * 1000); // Change 1000 to a larger number if needed
-    setBackgroundImage(`https://source.unsplash.com/1600x900/?numbers&${randomNumber}`);
+    setBackgroundImage(`https://i.postimg.cc/13XSdyb0/numbeback.jpg`);
   };
 
   // Call the function to set a random background image when the component mounts
@@ -56,6 +64,43 @@ const NumberGuess = () => {
     }
   };
 
+  const handleSave = async (e) => {
+    e.preventDefault();
+    setError(null);
+    try {
+        await axios.post(`http://localhost:5000/api/game/NumberGuessStatSv`, 
+          { username: username, 
+            wincount: correctCount, 
+            failcount: failedCount}, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        Swal.fire(
+            'saved!',
+            'Your Statistics has been saved.',
+            'success'
+        );
+        navigate('/home');
+    } catch (err) {
+        console.error(err.response ? err.response.data : err.message);
+        const errorMsg = err.response && err.response.data && err.response.data.msg 
+            ? err.response.data.msg 
+            : 'An error occurred. Please try again.';
+        setError(errorMsg);
+        Swal.fire(
+            'Error!',
+            'There was an error updating your Statistics.',
+            'error'
+        );
+    }
+}; 
+
+  if (!isAuthenticated) {
+    navigate('/login');
+    return null;
+}
+
   return (
     <div>
         <Navigation numberOfNotifications={5} />
@@ -63,7 +108,7 @@ const NumberGuess = () => {
       <div className="container mt-5" style={{ paddingTop: '10%' }}>
         <div className="row justify-content-center">
           <div className="col-md-6">
-            <div className="card" style={{ width: '300px', backgroundColor: '#fff', border: '1px solid #ccc', borderRadius: '8px', padding: '20px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', opacity: isGameOver ? '1' : '0.75' }}>
+            <div className="card" style={{ width: '300px', backgroundColor: '#fff', border: '1px solid #ccc', borderRadius: '8px', padding: '20px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', opacity: isGameOver ? '1' : '0.88' }}>
               <div className="card-body">
                 <div className="number-guess-card">
                   <h2 style={{ marginTop: '0', textAlign: 'center' }}>Guess the Number</h2>
@@ -100,6 +145,9 @@ const NumberGuess = () => {
                 <p>Correct Guesses: {correctCount}</p>
                 <p>Failed Guesses: {failedCount}</p>
               </div>
+              <button style={{ width: '100%', padding: '10px', marginBottom: '10px', border: 'none', borderRadius: '5px', backgroundColor: '#007bff', color: '#fff', cursor: 'pointer' }} onClick={handleSave}>
+                Save Statistics
+              </button>
             </div>
           </div>
         </div>

@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
-import { Link, useNavigate  } from 'react-router-dom'; 
-import '../Login/Login.css'
+import '../Login/Login.css';
+import React, { useState, useContext } from 'react';
+import axios from 'axios';
+import { AuthContext } from '../../context/AuthContext';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Login = () => {
   const navigate = useNavigate();
-
+  const { login, logout } = useContext(AuthContext);
+  const [error, setError] = useState(null);
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -23,8 +26,11 @@ const Login = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  logout();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
     let formErrors = {};
     if (!formData.username) {
       formErrors.username = 'Username is required';
@@ -35,8 +41,28 @@ const Login = () => {
     setErrors(formErrors);
 
     if (formData.username && formData.password) {
-      navigate('/home');
-    }
+      try {
+          const res = await axios.post('http://localhost:5000/api/auth/login', {
+              username: formData.username,
+              password: formData.password
+          });
+          console.log('Response:', res); // Log the entire response
+  
+          if (res && res.data && res.data.token) {
+              login(res.data.token,formData.username);
+              navigate('/home');
+          } else {
+              setError('Login failed. Please try again.');
+          }
+      } catch (err) {
+          console.error('Error:', err); // Log the entire error
+  
+          const errorMsg = err.response && err.response.data && err.response.data.msg 
+              ? err.response.data.msg 
+              : 'An error occurred. Please try again.';
+          setError(errorMsg);
+      }      
+  }  
   };
 
   return (
@@ -48,6 +74,7 @@ const Login = () => {
             <div className="card-body">
               <h2 className="card-title mb-4" style={{textAlign: 'center'}}>Welcome to the Game-Hub</h2>
               <h3 className="card-subtitle mb-4" style={{textAlign: 'center'}}>Login to your account</h3>
+              {error && <p style={{ color: 'red' }}>{error}</p>}
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                   <label htmlFor="username" className="form-label">
